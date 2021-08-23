@@ -37,7 +37,6 @@ const Styles = () => {
       .Column__title {
         font-size: 16px;
         font-weight: 500;
-        text-transform: uppercase;
       }
       .Column__data {
         flex: 1;
@@ -57,8 +56,8 @@ const Styles = () => {
         align-items: center;
       }
       .Player__avatar {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
       }
       .Player__name {
@@ -67,7 +66,7 @@ const Styles = () => {
         font-size: 12px;
       }
       .Player--selected {
-        background-color: lightblue;
+        background-color: #e8f4f8;
       }
 
       .Feature {
@@ -83,7 +82,7 @@ const Styles = () => {
         font-size: 12px;
       }
       .Feature--selected {
-        background-color: lightblue;
+        background-color: #e8f4f8;
       }
 
       .Selections {
@@ -93,15 +92,29 @@ const Styles = () => {
         align-items: center;
         padding: 8px;
       }
-      .Selections__item {
-        margin: 0px 4px;
+      .Selections__symbol {
+        font-size: 24px;
       }
 
       .Selection {
-
+        font-size: 14px;
+        padding: 8px;
+        margin: 0px 8px;
+        border-radius: 4px;
+        border: 1px solid black;
       }
       .Selection--empty {
+        color: rgb(153,153,153);
+        border: 1px dashed rgb(153,153,153);
+      }
 
+      .PlayButton:hover {
+        cursor: pointer;
+      }
+      .PlayButton--enabled {
+        color: white;
+        background-color: #28a745;
+        border-color: #28a745;
       }
       `}
     </style>
@@ -156,9 +169,6 @@ const HomeScreen = ({ setCurrentGame }) => {
     fetchAvailableFeatures();
   }, []);
 
-  console.log('availableFeatures');
-  console.log(availableFeatures);
-
   function isSelectedPlayer(id) {
     return selectedPlayer && selectedPlayer.id === id;
   }
@@ -178,7 +188,7 @@ const HomeScreen = ({ setCurrentGame }) => {
             .map((player) => {
               return (
                 <div className={`ListItem Player ${isSelectedPlayer(player.id) ? 'Player--selected' : '' }`} onClick={() => setSelectedPlayer(player) }>
-                  <img className="Player__avatar" src={player.avatarUrl} />
+                  <img className="Player__avatar" src={ player.avatarUrl } />
                   <p className="Player__name">{ player.name }</p>
                 </div>
               )
@@ -208,29 +218,67 @@ const HomeScreen = ({ setCurrentGame }) => {
     );
   }
 
+  function renderSelectedPlayer() {
+    if (!selectedPlayer) {
+      return (
+        <div className="Selection Selection--empty">
+          Player
+        </div>
+      );
+    }
+
+    return (
+      <div className="Selection Player">
+        <img className="Player__avatar" src={ selectedPlayer.avatarUrl } />
+        <p className="Player__name">{ selectedPlayer.name }</p>
+      </div>
+    );
+  }
+
+  function renderSelectedFeature() {
+    if (!selectedFeature) {
+      return (
+        <div className="Selection Selection--empty">
+          Feature
+        </div>
+      );
+    }
+
+    return (
+      <div className="Selection Feature">
+        <h3 className="Feature__referenceNum">{ selectedFeature.referenceNum }</h3>
+        <p className="Feature__name">{ selectedFeature.name }</p>
+      </div>
+    );
+  }
+
+  function startGame() {
+    console.log('Start Game!');
+  }
+
   return (
     <div className="HomeScreen">
       <Styles />
       <div className="HomeScreen__selections">
         <div className="Selections">
-          <div className="Selections__item Selection">
-            Select a Player
-          </div>
-
-          <div className="Selections__item">
-            +
-          </div>
-
-          <div className="Selections__item Selection">
-            Select a Feature
-          </div>
+          { renderSelectedPlayer() }
+          <div className="Selections__symbol">+</div>
+          { renderSelectedFeature() }
+          <div className="Selections__symbol">=</div>
+          <button
+            className={`Selection PlayButton ${enablePlayButton ? 'PlayButton--enabled' : ''}`}
+            onClick={() => startGame()}
+            disabled={!enablePlayButton}
+          >
+            Play!
+          </button>
         </div>
       </div>
 
       <div className="HomeScreen__availableSelections AvailableSelections">
         <div className="AvailableSelections__column">
           <div className="Column">
-            <h2 className="Column__title">Available Players</h2>
+            <h2 className="Column__title">Select a Player</h2>
             <div className="Column__data">
               { renderAvailablePlayers() }
             </div>
@@ -238,7 +286,7 @@ const HomeScreen = ({ setCurrentGame }) => {
         </div>
         <div className="AvailableSelections__column">
           <div className="Column">
-            <h2 className="Column__title">Available Features</h2>
+            <h2 className="Column__title">Select a Feature</h2>
             <div className="Column__data">
               { renderAvailableFeatures() }
             </div>

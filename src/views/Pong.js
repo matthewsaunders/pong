@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import GameScreen from './GameScreen';
 import HomeScreen from './HomeScreen';
+import GameScreen from './GameScreen';
+import CreateGameScreen from './CreateGameScreen';
 
 const Styles = () => {
   return (
@@ -21,18 +22,27 @@ const Styles = () => {
 
 const Pong = ({ initConfig }) => {
   const [currentGame, setCurrentGame] = useState(null);
+  const [currentScreen, setCurrentScreen] = useState('home');
 
-  const screen = currentGame ?
-    <GameScreen /> :
-    <HomeScreen
-      setCurrentGame={setCurrentGame}
-    />;
+  let screen;
+  switch (currentScreen) {
+    case 'create':
+      screen = <CreateGameScreen />;
+      break;
+    case 'game':
+      screen = <GameScreen />;
+      break;
+    case 'home':
+    default:
+      console.log(`DEFAULT: '${currentScreen}'`)
+      screen = <HomeScreen setScreen={setCurrentScreen} />;
+  }
 
   return (
     <>
       <Styles />
       <div className='Pong'>
-        {screen}
+        { screen }
       </div>
     </>
   );

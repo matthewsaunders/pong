@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Loading from './Loading';
 
 const Styles = () => {
   return (
@@ -277,11 +278,7 @@ const CreateGameScreen = ({ setCurrentGame }) => {
       </div>
 
       { !allOptionsLoaded && 
-        <div style={{ display: 'flex', alignItems: 'center', alignContent: 'center', height: '100%', width: '100%' }} >
-          <div style={{ flex: '1' }} />
-          <aha-spinner style={{ height: '60px', width: '60px' }} />
-          <div style={{ flex: '1' }} />
-        </div>
+        <Loading />
       }
 
       { allOptionsLoaded &&
